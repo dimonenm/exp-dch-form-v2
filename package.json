@@ -2,6 +2,7 @@
   "name": "exp-dch-form-v2",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -9,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroui/navbar": "^2.2.25",
     "@heroui/react": "^2.8.5",
     "framer-motion": "^12.23.24",
     "next": "^16.0.1",

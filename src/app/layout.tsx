@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import {HeroUIProvider} from "@heroui/react";
+import { HeroUIProvider } from "@heroui/react"
+import Header from './components/UI/Header'
+import { Providers } from "./providers"
 
 const inter = Inter({
   variable: '--font-inter-sans',
@@ -20,11 +22,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html className="light" lang='en' >
       <body
-        className={`${inter.variable} antialiased`}
-      ><HeroUIProvider>{children}</HeroUIProvider>
-
+        className={`light ${inter.variable} antialiased min-w-[900px] w-screen`}
+      >
+        <div className='flex flex-col h-screen'>
+          <Providers >
+          <Header/>
+          {children}
+        </Providers>
+        </div>
       </body>
     </html>
   )
