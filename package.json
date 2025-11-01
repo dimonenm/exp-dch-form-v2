@@ -12,6 +12,7 @@
   "dependencies": {
     "@heroui/navbar": "^2.2.25",
     "@heroui/react": "^2.8.5",
+    "axios": "^1.11.0",
     "framer-motion": "^12.23.24",
     "next": "^16.0.1",
     "react": "^19.2.0",

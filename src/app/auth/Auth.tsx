@@ -1,15 +1,21 @@
-"use client";
+"use client"
 
-import { Button, Form, Input } from "@heroui/react";
-import GetHeaders from './actions/getHeaders'
+import { Button, Form, Input } from "@heroui/react"
+import { FormEvent, useState } from 'react'
+import { login } from './actions/login'
 
 
 export function Auth() {
-    const submit = ()=>{
 
-        console.log('submit');
+    const submit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+
+        const data = Object.fromEntries(new FormData(event.currentTarget))
+
+        const loginData = {login: data.login as string, password: data.password as string}
+        
+        console.log('data: ', loginData)
     }
-    console.log(GetHeaders());
 
     return (
         <div className="flex justify-center items-center h-screen overflow-hidden">
@@ -23,11 +29,11 @@ export function Auth() {
                 >
                     <Input
                         isRequired
-                        errorMessage="Please enter a valid username"
-                        // label="Username"
-                        labelPlacement="outside"
-                        name="username"
-                        placeholder="Username"
+                        errorMessage="Please enter a valid login"
+                        // label="login"
+                        // labelPlacement="outside"
+                        name="login"
+                        placeholder="login"
                         type="text"
                     />
 
@@ -35,7 +41,7 @@ export function Auth() {
                         isRequired
                         errorMessage="Please enter a valid password"
                         // label="Email"
-                        labelPlacement="outside"
+                        // labelPlacement="outside"
                         name="password"
                         placeholder="Password"
                         type="password"
@@ -48,5 +54,5 @@ export function Auth() {
                 </Form>
             </div>
         </div>
-    );
+    )
 }
