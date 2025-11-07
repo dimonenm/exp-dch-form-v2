@@ -1,20 +1,26 @@
 "use client"
 
 import { Button, Form, Input } from "@heroui/react"
-import { FormEvent, useState } from 'react'
+import { FormEvent, useActionState, useState } from 'react'
 import { login } from './actions/login'
 
 
 export function Auth() {
 
+    const [state, loginAction, isPending] = useActionState(login, undefined)
+
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
-        const data = Object.fromEntries(new FormData(event.currentTarget))
+        const data = new FormData(event.currentTarget)
 
-        const loginData = {login: data.login as string, password: data.password as string}
-        
-        console.log('data: ', loginData)
+        if (data.get('login') && data.get('password')) {
+
+            const loginData = { login: data.get('login')?.toString(), password: data.get('password')?.toString() }
+            const loginResult = login(state, data)
+        }
+
+
     }
 
     return (
@@ -24,8 +30,9 @@ export function Auth() {
                     Авторизация
                 </div>
                 <Form
+                    action={loginAction}
                     className="w-full max-w-xs flex flex-col gap-4"
-                    onSubmit={submit}
+                // onSubmit={submit}
                 >
                     <Input
                         isRequired

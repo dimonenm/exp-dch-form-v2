@@ -1,15 +1,33 @@
 "use server"
 import axios, { AxiosError, CreateAxiosDefaults } from 'axios'
 
-const options: CreateAxiosDefaults = {
-	headers: { 'Content-Type': 'application/json' },
-	withCredentials: true
-}
+export async function login(prevState: any, formData: FormData) {
+	// export async function login(loginData: { login: string | undefined, password: string | undefined }) {
 
-export async function login(loginData: { login: string, password: string }) {
+	interface ILoginDto {
+		login: string | undefined,
+		password: string | undefined
+	}
 	try {
-		
-		const res = await axios.post('http://localhost:3001/auth/login', loginData)
+
+		if (!formData.get('login')) {
+			return 'login not found'
+		}
+		if (!formData.get('password')) {
+			return 'password not found'
+		}
+
+
+
+		const payload: ILoginDto = { login: formData.get('login')?.toString(), password: formData.get('password')?.toString() }
+
+		const res = await axios.post('http://localhost:3001/auth/login', payload, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+		}).then(response => response.data)
+
 		return res
 
 	} catch (error: unknown) {
