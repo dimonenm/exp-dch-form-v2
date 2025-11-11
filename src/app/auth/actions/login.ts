@@ -1,13 +1,17 @@
 "use server"
 import axios, { AxiosError, CreateAxiosDefaults } from 'axios'
 
-export async function login(prevState: any, formData: FormData) {
-	// export async function login(loginData: { login: string | undefined, password: string | undefined }) {
+interface ILoginDto {
+	login: string | undefined,
+	password: string | undefined
+}
+interface IResponseDto {
+	type: string | undefined,
+	message: string | undefined
+}
 
-	interface ILoginDto {
-		login: string | undefined,
-		password: string | undefined
-	}
+export async function login(prevState: any, formData: FormData) {
+
 	try {
 
 		if (!formData.get('login')) {
@@ -16,8 +20,6 @@ export async function login(prevState: any, formData: FormData) {
 		if (!formData.get('password')) {
 			return 'password not found'
 		}
-
-
 
 		const payload: ILoginDto = { login: formData.get('login')?.toString(), password: formData.get('password')?.toString() }
 
@@ -28,11 +30,13 @@ export async function login(prevState: any, formData: FormData) {
 			},
 		}).then(response => response.data)
 
-		return res
+		const responseDto: IResponseDto = { type: "success ", message: res }
+
+		return responseDto
 
 	} catch (error: unknown) {
 		if (axios.isAxiosError(error)) {
-			handleAxiosError(error)
+			return handleAxiosError(error)
 		} else {
 			console.error('Неожиданная ошибка:', error)
 		}
@@ -40,6 +44,15 @@ export async function login(prevState: any, formData: FormData) {
 }
 
 function handleAxiosError(error: AxiosError) {
+
+	// Дополнительно можно проверить код ошибки
+	if (error.code === 'ERR_NETWORK') {
+		console.error('Сетевая ошибка')
+	}
+	if (error.code === 'ECONNABORTED') {
+		console.error('Запрос прерван (timeout)')
+	}
+
 	if (error.response) {
 		// Сервер вернул ответ с ошибкой (статус 4xx, 5xx)
 		const responseMessage = error.response.data as { message: string }
@@ -48,6 +61,11 @@ function handleAxiosError(error: AxiosError) {
 			`Ошибка сервера: ${error.response.status} ${error.response.statusText}`,
 			responseMessage.message
 		)
+
+		const responseDto: IResponseDto = { type: "success ", message: `${error.response.status} ${error.response.statusText} ${responseMessage.message}` }
+
+		return responseDto
+
 		// Примеры действий:
 		// - показать пользователю сообщение о проблеме на сервере
 		// - логировать детали ошибки
@@ -58,6 +76,10 @@ function handleAxiosError(error: AxiosError) {
 		// Примеры действий:
 		// - предложить проверить интернет‑соединение
 		// - повторить запрос через некоторое время
+
+		const responseDto: IResponseDto = { type: "success ", message: error.request }
+
+		return responseDto
 	}
 	else {
 		// Ошибка при настройке запроса (например, неверный URL)
@@ -65,13 +87,9 @@ function handleAxiosError(error: AxiosError) {
 		// Примеры действий:
 		// - проверить конфигурацию API
 		// - уведомить разработчика
-	}
 
-	// Дополнительно можно проверить код ошибки
-	if (error.code === 'ERR_NETWORK') {
-		console.error('Сетевая ошибка')
-	}
-	if (error.code === 'ECONNABORTED') {
-		console.error('Запрос прерван (timeout)')
+		const responseDto: IResponseDto = { type: "success ", message: error.request }
+
+		return responseDto
 	}
 }

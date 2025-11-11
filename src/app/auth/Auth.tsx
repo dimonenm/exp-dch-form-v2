@@ -8,6 +8,8 @@ import { login } from './actions/login'
 export function Auth() {
 
     const [state, loginAction, isPending] = useActionState(login, undefined)
+    console.log('Auth state: ', state);
+    console.log('Auth isPending: ', isPending);
 
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
