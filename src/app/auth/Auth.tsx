@@ -2,14 +2,12 @@
 
 import { Button, Form, Input } from "@heroui/react"
 import { FormEvent, useActionState, useState } from 'react'
-import { login } from './actions/login'
+import { IResponseDto, login } from './actions/login'
 
 
 export function Auth() {
 
     const [state, loginAction, isPending] = useActionState(login, undefined)
-    console.log('Auth state: ', state);
-    console.log('Auth isPending: ', isPending);
 
     const submit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -23,6 +21,11 @@ export function Auth() {
         }
 
 
+    }
+
+    function isError(state: IResponseDto  | undefined): string | undefined {
+        if (state?.type === 'error') return state.message
+        else return undefined
     }
 
     return (
@@ -55,6 +58,8 @@ export function Auth() {
                         placeholder="Password"
                         type="password"
                     />
+                    {isError(state)}
+                    {isPending ? 'download' : null}
                     <div className="flex gap-2">
                         <Button color="primary" type="submit">
                             Войти

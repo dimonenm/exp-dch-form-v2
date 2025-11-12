@@ -1,46 +1,55 @@
 "use server"
 import axios, { AxiosError, CreateAxiosDefaults } from 'axios'
+import { createSession } from './session'
+import { redirect } from 'next/navigation'
 
 interface ILoginDto {
 	login: string | undefined,
 	password: string | undefined
 }
-interface IResponseDto {
+export interface IResponseDto {
 	type: string | undefined,
 	message: string | undefined
 }
 
 export async function login(prevState: any, formData: FormData) {
 
+
+	if (!formData.get('login')) {
+		return { type: 'error', message: 'login not found' }
+	}
+	if (!formData.get('password')) {
+		return { type: 'error', message: 'password not found' }
+	}
+
+	const payload: ILoginDto = { login: formData.get('login')?.toString(), password: formData.get('password')?.toString() }
+
+	let res
+
 	try {
-
-		if (!formData.get('login')) {
-			return 'login not found'
-		}
-		if (!formData.get('password')) {
-			return 'password not found'
-		}
-
-		const payload: ILoginDto = { login: formData.get('login')?.toString(), password: formData.get('password')?.toString() }
-
-		const res = await axios.post('http://localhost:3001/auth/login', payload, {
+		res = await axios.post('http://localhost:3001/auth/login', payload, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
 		}).then(response => response.data)
-
-		const responseDto: IResponseDto = { type: "success ", message: res }
-
-		return responseDto
-
 	} catch (error: unknown) {
+
+		if (error instanceof Error && error.message.includes('NEXT_REDIRECT')) {
+			// Перенаправление уже инициировано — ничего не делаем
+			console.error('error instanceof Error: ', error)
+		}
+
 		if (axios.isAxiosError(error)) {
 			return handleAxiosError(error)
 		} else {
 			console.error('Неожиданная ошибка:', error)
 		}
 	}
+
+	await createSession(res)
+
+	redirect("/list")
 }
 
 function handleAxiosError(error: AxiosError) {
@@ -62,7 +71,7 @@ function handleAxiosError(error: AxiosError) {
 			responseMessage.message
 		)
 
-		const responseDto: IResponseDto = { type: "success ", message: `${error.response.status} ${error.response.statusText} ${responseMessage.message}` }
+		const responseDto: IResponseDto = { type: "error", message: `${error.response.status} ${error.response.statusText} ${responseMessage.message}` }
 
 		return responseDto
 
@@ -77,7 +86,7 @@ function handleAxiosError(error: AxiosError) {
 		// - предложить проверить интернет‑соединение
 		// - повторить запрос через некоторое время
 
-		const responseDto: IResponseDto = { type: "success ", message: error.request }
+		const responseDto: IResponseDto = { type: "error", message: error.request }
 
 		return responseDto
 	}
@@ -88,7 +97,7 @@ function handleAxiosError(error: AxiosError) {
 		// - проверить конфигурацию API
 		// - уведомить разработчика
 
-		const responseDto: IResponseDto = { type: "success ", message: error.request }
+		const responseDto: IResponseDto = { type: "error", message: error.request }
 
 		return responseDto
 	}
