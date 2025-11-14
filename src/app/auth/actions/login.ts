@@ -49,7 +49,7 @@ export async function login(prevState: any, formData: FormData) {
 
 	await createSession(res)
 
-	redirect("/list")
+	redirect("/")
 }
 
 function handleAxiosError(error: AxiosError) {
