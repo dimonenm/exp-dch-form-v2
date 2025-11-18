@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { logout } from '../auth/actions/logout'
 
 export const metadata: Metadata = {
 	title: 'List',
@@ -7,6 +8,9 @@ export const metadata: Metadata = {
 
 export default function ListPage() {
 	return (
+		<>
 		<div>List</div>
+		<div onClick={logout}>Logout</div>
+		</>
 	)
 }

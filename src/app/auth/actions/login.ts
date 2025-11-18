@@ -1,5 +1,5 @@
 "use server"
-import axios, { AxiosError, CreateAxiosDefaults } from 'axios'
+import axios, { AxiosError } from 'axios'
 import { createSession } from './session'
 import { redirect } from 'next/navigation'
 
@@ -13,7 +13,6 @@ export interface IResponseDto {
 }
 
 export async function login(prevState: any, formData: FormData) {
-
 
 	if (!formData.get('login')) {
 		return { type: 'error', message: 'login not found' }

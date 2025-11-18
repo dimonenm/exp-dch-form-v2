@@ -12,3 +12,8 @@ export async function createSession(jwt: string) {
 		expires: expiresAt,
 	})
 }
+
+export async function deleteSession() {
+	const cookieStore = await cookies()
+	cookieStore.delete('session')
+}
