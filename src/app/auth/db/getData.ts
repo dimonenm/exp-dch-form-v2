@@ -1,14 +1,14 @@
 interface IObjectSeizedDuringInspectionOfSceneItem {
 	handprints: string
-	shoe marks: string
-	signs of forced entry
-	traces of fabric
-	tire tracks
-	traces of biological origin
-	other traces
+	shoeMarks: string
+	signsOfForcedEntry: string
+	tracesOfFabric: string
+	tireTracks: string
+	tracesOfBiologicalOrigin: string
+	otherTraces: string
 }
 
-interface IInspectionIncidentSceneWithAndWithoutSpecialistsItem {
+interface IInspectionIncidentSceneIncludedOrNotIncludedInSummary {
 	incidentReportNumber: number
 	departmentOfInternalAffairs: string
 	specialist: string
@@ -21,7 +21,19 @@ interface IInspectionIncidentSceneWithAndWithoutSpecialistsItem {
 	CUSP: string
 	numberCriminalCase: string
 	articleOfCriminalCode: string
-	objectsSeizedDuringInspectionOfScene: string
+	objectsSeizedDuringInspectionOfScene: IObjectSeizedDuringInspectionOfSceneItem
+}
+
+interface IFactsOfNotInvolvingSpecialists {
+	incidentReportNumber: number
+	departmentOfInternalAffairs: string
+	typeOfCrime: string
+	address: string
+	CUSP: string
+	specialist: string
+	reasonNotInvolvingSpecialists: string
+	specialistIndicationInSummary: string
+	fullNameOfPersonCommittedCrime: string
 }
 
 
